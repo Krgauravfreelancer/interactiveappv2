@@ -1,0 +1,296 @@
+<div class="wrapper wrapper-full-page">
+    <nav class="navbar navbar-primary navbar-transparent navbar-absolute">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu-example">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/#/dashboard">Magnitudinis</a>
+            </div>
+            <div class="collapse navbar-collapse" id="menu-example">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class=" active ">
+                        <a routerLink="/register">
+                            <i class="material-icons">person_add</i> Register
+                        </a>
+                    </li>
+                    <li class="">
+                        <a routerLink="/login">
+                            <i class="material-icons">fingerprint</i> Login
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="full-page register-page" filter-color="black">
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <div class="wizard-container">
+                            <div *ngIf="!registrationComplete">
+                                <div class="card wizard-card" data-color="rose" id="wizardProfile">
+                                    <form [formGroup]="tradersRegForm">
+                                        <div class="wizard-header">
+                                            <h3 class="wizard-title">
+                                                Build Your Profile
+                                            </h3>
+                                            <h5>This information will let us know more about you.</h5>
+                                        </div>
+                                        <div class="wizard-navigation">
+                                            <ul>
+                                                <li>
+                                                    <a href="#about" data-toggle="tab">About</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#address" data-toggle="tab">Address</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#trdexp" data-toggle="tab">Experience</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#cred" data-toggle="tab">Account</a>
+                                                </li>
+                                            </ul>
+                                            <div id="bar" class="progress">
+                                                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-content">
+                                            <div class="tab-pane" id="about">
+                                                <div class="row">
+                                                    <h4 class="info-text"> Let's start with your basic information</h4>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group label-floating has-errors">
+                                                            <label class="control-label">First Name
+                                                                <small>(required)</small>
+                                                            </label>
+                                                            <input type="text" class="form-control" formControlName="firstname" name="firstname">
+                                                        </div>
+                                                        <div class="form-group label-floating has-errors">
+                                                            <label class="control-label">Last Name
+                                                                <small>(required)</small>
+                                                            </label>
+                                                            <input type="text" class="form-control" formControlName="lastname" name="lastname">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group label-floating has-errors">
+                                                            <label class="control-label">Email
+                                                                <small>(required)</small>
+                                                            </label>
+                                                            <input type="email" class="form-control" id="email" formControlName="email" name="email">
+                                                        </div>
+                                                        <div class="form-group label-floating has-errors">
+                                                            <input type="tel" pattern="\d*" class="form-control" id="phone" formControlName="phone" name="phone">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane" id="address">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <h4 class="info-text"> Tell us where do you live ? </h4>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group label-floating has-errors">
+                                                            <label class="control-label">Address Line 1</label>
+                                                            <input type="text" class="form-control" formControlName="addressLine1" name="addressLine1">
+                                                        </div>
+                                                        <div class="form-group label-floating has-errors">
+                                                            <label class="control-label">Address Line 2</label>
+                                                            <input type="text" class="form-control" formControlName="addressLine2" name="addressLine2">
+                                                        </div>
+
+                                                        <div class="form-group label-floating has-errors">
+                                                            <angular2-multiselect name="country" class="form-control" formControlName="country" [data]="countryOptions" [(ngModel)]="countrySelectedItem"
+                                                                [settings]="countrySettings"></angular2-multiselect>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+
+                                                        <div class="form-group label-floating has-errors">
+                                                            <label class="control-label">State</label>
+                                                            <input type="text" class="form-control" formControlName="state" name="state">
+                                                        </div>
+                                                        <div class="form-group label-floating has-errors">
+                                                            <label class="control-label">City</label>
+                                                            <input type="text" class="form-control" formControlName="city" name="city">
+                                                        </div>
+                                                        <div class="form-group label-floating has-errors">
+                                                            <label class="control-label">Pincode</label>
+                                                            <input type="number" class="form-control" formControlName="pincode" name="pincode">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane" id="trdexp">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <h4 class="info-text"> Tell us about your trading experience </h4>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group label-floating has-errors">
+                                                            <angular2-multiselect class="form-control" formControlName="tradeExp" [data]="tradingExpOptions" [(ngModel)]="tradingExpSelectedItem"
+                                                                [settings]="tradingExpSettings"></angular2-multiselect>
+                                                        </div>
+                                                        <div class="form-group label-floating has-errors">
+                                                            <angular2-multiselect class="form-control" formControlName="tradeFeq" [data]="tradingFeqOptions" [(ngModel)]="tradeFeqSelectedItem"
+                                                                [settings]="tradeFeqSettings"></angular2-multiselect>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group label-floating has-errors">
+                                                            <angular2-multiselect class="form-control" formControlName="interest" [data]="interestOptions" [(ngModel)]="interestSelectedItems"
+                                                                [settings]="interestSettings"></angular2-multiselect>
+                                                        </div>
+                                                        <div class="form-group label-floating has-errors">
+                                                            <angular2-multiselect class="form-control" formControlName="brokeAcc" [data]="brokeAccOptions" [(ngModel)]="brokeAccSelectedItems"
+                                                                [settings]="brokeAccSettings"></angular2-multiselect>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane" id="cred">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <h4 class="info-text"> Create an account with us </h4>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group label-floating has-errors">
+                                                            <label class="control-label">Username</label>
+                                                            <input type="text" class="form-control" id="username" formControlName="username" name="username" id="username">
+                                                        </div>
+                                                        <div class="form-group label-floating has-errors">
+                                                            <label class="control-label">Password</label>
+                                                            <input type="password" class="form-control" formControlName="password" name="password" id="password">
+                                                        </div>
+                                                        <div class="form-group label-floating has-errors">
+                                                            <label class="control-label">Confirm Password</label>
+                                                            <input type="password" class="form-control" #confPass formControlName="confPass" name="confPass" id="confPass">
+                                                        </div>
+                                                        <div id="recaptcha-container"></div>
+                                                        <!-- <div *ngIf="windowRef.confirmationResult">
+                                                            <hr>
+                                                            <label for="code">Enter your Verification Code Here</label><br>
+                                                            <input type="text" name="code" [(ngModel)]="verificationCode">
+                                                            <button (click)="verifyLoginCode()">Verify</button>
+                                                        </div> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="tab-pane" id="verify">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <h4 class="info-text"> Enter the Verification Code we sent you on your mobile phone </h4>
+                                                    </div>
+                                                    <div class="col-sm-12" >
+                                                        <div class="form-group label-floating has-errors">
+                                                            <label class="control-label">Verification Code</label>
+                                                            <input type="number" class="form-control" name="verificationCode" id="verificationCode">
+                                                            <button (click)="verifyLoginCode()">Verify</button>
+                                                        </div>
+                                                        <div *ngIf="windowRef.confirmationResult">
+                                                            <hr>
+                                                            <label for="code">Enter your Verification Code Here</label><br>
+                                                            <input type="text" name="code" [(ngModel)]="verificationCode">
+                                                            <button (click)="verifyLoginCode()">Verify</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> -->
+                                        </div>
+                                        <div class="wizard-footer">
+                                            <div class="pull-right">
+                                                <input type='button' class='btn btn-next btn-fill btn-rose btn-wd' name='next' value='Next' />
+                                                <input type='button' class='btn btn-finish btn-fill btn-rose btn-wd' name='finish' value='Finish' [disabled]="!recaptchaVerified" (click)="onSubmit(tradersRegForm.value)"
+                                                />
+                                            </div>
+                                            <div class="pull-left">
+                                                <input type='button' class='btn btn-previous btn-fill btn-default btn-wd' name='previous' value='Previous' />
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+
+
+                            <div *ngIf="registrationComplete && !phoneVerified">
+                                <div class="card wizard-card" data-color="rose" id="wizardProfile2">
+                                    <div class="wizard-header">
+                                        <h3 class="wizard-title">
+                                            We just sent you a message!
+                                        </h3>
+                                        <h5>Please enter the Verification Code in the SMS</h5>
+                                    </div>
+                                    <div class="tab-pane" id="verify">
+                                        <div class="col-md-4"></div>
+                                        <div class="col-md-4">
+                                            <div class="form-group label-floating has-errors">
+                                                <label class="control-label">Verification Code</label>
+                                                <input type="number" class="form-control" name="verificationCode" id="verificationCode" #vc>
+                                                <div style="text-align: center">
+                                                    <input type='button' class='btn btn-fill btn-rose btn-wd' name='verify' value='Verify' (click)="verifyLoginCode(vc.value)"
+                                                    />
+                                                </div>
+                                                <!-- <button (click)="verifyLoginCode(vc.value)">Verify</button> -->
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4"></div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="wizard-header">
+                                        <h5>Also please verify your email by clicking on the link we sent you. This is necessary
+                                            before Login.</h5>
+                                        <div style="text-align: center">
+                                            <input type='button' class='btn btn-fill btn-rose btn-wd' name='gotoLogin' value='Proceed to Login' (click)="gotoLogin()"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div *ngIf="registrationComplete && phoneVerified">
+                                <div class="card wizard-card" data-color="rose" id="wizardProfile2">
+                                    <div class="wizard-header">
+                                        <h3 class="wizard-title">
+                                            You have verified your phone number!
+                                            <span>
+                                                <i class="material-icons" style="color: #34b7f1">done_all</i>
+                                            </span>
+                                        </h3>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="wizard-header">
+                                        <h5>Also please verify your email by clicking on the link we sent you. This is necessary
+                                            before Login.</h5>
+                                        <div style="text-align: center">
+                                            <input type='button' class='btn btn-fill btn-rose btn-wd' name='gotoLogin' value='Proceed to Login' (click)="gotoLogin()"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="container">
+                <p class="copyright pull-right">
+                    &copy; {{test | date: 'yyyy'}}
+                    <a href="https://www.magnitudinis.com">Magnitudinis</a>
+                </p>
+            </div>
+        </footer>
+        <div class="full-page-background" style="background-image: url(../../../assets/img/register.jpeg) "></div>
+    </div>
+</div>

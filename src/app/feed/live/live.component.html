@@ -1,0 +1,66 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="row">
+                <div class="col-md-12">
+                    <form [formGroup]="form">
+                        <div class="card-content">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <angular2-multiselect class="form-control" 
+                                            [formControl]="exchange" 
+                                            [data]="exchangeOptions" 
+                                            [(ngModel)]="exchangeSelectionItems"
+                                            [settings]="exchangeDropdownSettings" 
+                                            (onSelect)="onExchangeItemSelect($event)"
+                                            (onDeSelect)="onExchangeItemDeselect($event)"
+                                            (onSelectAll)="onExchangeItemSelect($event)" 
+                                            (onDeSelectAll)="onExchangeItemDeselectAll($event)">
+                                        </angular2-multiselect>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <angular2-multiselect class="form-control" 
+                                            [formControl]="symbol" 
+                                            [data]="symbolOptions" 
+                                            [(ngModel)]="symbolSelectedItems"
+                                            [settings]="symbolDropdownSettings" 
+                                            (onSelect)="onSymbolItemSelect($event)"
+                                            (onDeSelect)="onSymbolItemSelect($event)"
+                                            (onSelectAll)="onSymbolItemSelect($event)" 
+                                            (onDeSelectAll)="onSymbolItemSelect($event)"
+                                            labelKey="Exchange"
+                                            primaryKey="Symbol">
+                                        </angular2-multiselect>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="card-content">
+                        <div class="row">
+                            <button class="btn btn-rose pull-right right-align" (click)="deleteRows()">Delete Selected Rows</button>
+                            <div class="col-md-12">
+                                <ag-grid-angular #agGrid
+                                    class="ag-dark"
+                                    style="width: 100%; height:51vh;"
+                                    [gridOptions]="liveGridOptions"
+                                    [rowData]="rowData"
+                                    (gridReady)="onGridReady($event)"
+                                    (gridSizeChanged)="onGridChange($event)"
+                                    rowSelection="multiple"
+                                    rowHeight="22"
+                                    enableCellChangeFlash="true"
+                                    animateRows="true">
+                                </ag-grid-angular>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>   
+        </div>        
+    </div>
+</div>
+

@@ -1,0 +1,46 @@
+<div class="new-search-container">
+  <div class="search-banner">
+
+    <a class="search-icon"><i class="fa fa-search"></i></a>
+    <input type="search" autocomplete="off" placeholder="Symbol" name="search" class="searchbox" [(ngModel)]="searchText"
+      (input)="DisplaySymbols()">
+    <a class="close-icon" (click)="ClearAll()"><i class="fa fa-close"></i></a>
+
+    <div class="SearchSuggestions" *ngIf="symbolList && symbolList.length > 0">
+      <div class="SearchListItems" *ngFor="let search of symbolList" (click)="ShowStockData(search)">
+        <div>
+          <h2 class="SearchListItems_heading">{{search.Symbol}}</h2>
+          <h2 class="SearchListItems_subheading">{{search.Exchange}}</h2>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="StockHeaderStock-main" *ngIf="stockData">
+      <div class="StockHeaderStock">
+        <div class="StockHeaderContainer" [ngClass]="[stockData.StockFlag ? 'positive' : 'negative']">
+          <span class="StockHeaderName">{{stockData.Company}}</span>
+          <div class="StockHeaderRow">
+            <div class="StockHeaderColumn">
+              <span class="StockHeaderAcronym">{{stockData.StockName}}</span>
+              <span class="StockHeaderBid">{{stockData.StockPrice}}</span>
+              <span class="StockHeaderChange">
+                <span [ngClass]="[stockData.StockFlag ? 'positiveIcon' : 'negativeIcon']">
+                  <i class="fa" [ngClass]="[stockData.StockFlag ? 'fa-caret-up' : 'fa-caret-down']"></i>
+                  {{stockData.StockChange}} ({{stockData.StockChangePercent}})</span>
+              </span>
+            </div>
+          </div>
+          <div class="StockHeaderRow">
+            <span class="StockHeaderExchange"></span>
+            <span class="StockHeaderLastUpdated"> Last Updated at {{stockData.StockUpdated}}</span>
+          </div>
+        </div>
+        <div class="StockHeaderFollowContainer">
+          <button class="btns" [ngClass]="[stockData.StockFlag ? 'positivebtn' : 'negativebtn']"
+          (click)="StartWatching(stockData.Exchange, stockData.StockName)" type="button">Watch</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

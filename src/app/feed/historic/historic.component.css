@@ -1,0 +1,23 @@
+.exchange-items {
+  position: relative;
+  color: black !important;
+  left: 48%;
+  top: 40%;
+}
+.symbol-items {
+  position: relative;
+  color: black !important;
+  left: 48%;
+  margin-top: 200px;
+}
+.ag-grid {
+  display:block;
+  margin-top:30px;
+  width:100%;
+}
+@media screen and (min-width: 480px) {
+ .ag-theme-material {
+  width: 70vw;
+  height: 70vh;
+ }
+}

@@ -1,0 +1,8 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons');
+
+.main-panel .main-content {
+    margin-top: 0px;
+    min-height: 100vh;
+    padding: 0px;
+}

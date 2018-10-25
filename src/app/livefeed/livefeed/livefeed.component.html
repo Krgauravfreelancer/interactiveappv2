@@ -1,0 +1,16 @@
+<div class="main-content" *ngIf="Messages.length > 0">
+  <div class="container-fluid main">
+    <div class="row boxdiv" *ngFor="let msg of Messages">
+      <div class="outer">
+        <span class="exchange">{{msg.Exchange }}</span>
+        <span class="createdat">{{msg.RelativeTime}}</span>
+      </div>
+      <div class="outer">
+        <span class="text">{{msg.MessageText}}</span>
+      </div>
+      <div class="outer">
+        <span class="localtime">{{msg.UnixToLocal}}</span>
+      </div>
+    </div>
+  </div>
+</div>
