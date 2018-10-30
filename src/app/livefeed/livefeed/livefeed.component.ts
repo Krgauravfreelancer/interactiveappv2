@@ -28,7 +28,7 @@ export class LivefeedComponent implements OnInit, OnDestroy {
   symbolSelectedItems = [];
   Messages: MessageModel[] = [];
   constructor(private livefeedservice: LivefeedService) {
-    this.socket = io('http://localhost:8080/');
+    this.socket = io('https://interactiveappv2.herokuapp.com/');
 
   }
 
