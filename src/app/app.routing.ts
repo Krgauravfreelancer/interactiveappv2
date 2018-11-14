@@ -4,8 +4,8 @@ import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 import { AuthGuard } from './services/auth.guard';
 import { AdminGuard } from './services/admin.guard';
-import { LivefeedComponent } from './livefeed/livefeed/livefeed.component';
 import { LivefeedsearchComponent } from './livefeed/livefeedsearch/livefeedsearch.component';
+import { LivefeedcontainerComponent } from './livefeed/livefeedcontainer/livefeedcontainer.component';
 
 export const AppRoutes: Routes = [
   {
@@ -31,7 +31,7 @@ export const AppRoutes: Routes = [
         path: 'feed',
         loadChildren: './feed/feed.module#FeedModule'
       },
-      { path: 'livefeed', component: LivefeedComponent },
+      { path: 'livefeed', component: LivefeedcontainerComponent },
       { path: 'livefeedsearch', component: LivefeedsearchComponent },
     ],
     canActivate: [AuthGuard]

@@ -29,6 +29,11 @@ export class LivefeedsearchComponent implements OnInit, OnDestroy {
   $search_suggestion: any;
   exchangeSelectionItems = [];
   symbolSelectedItems = [];
+  nosymbolFound = false;
+  WatchButtonText = 'Watch';
+  WatchButtonDisabled = false;
+  symbolSearched: string;
+  exchangeSearched: string;
 
   constructor(private livefeedservice: LivefeedService,
     private ls: LoaderService) { }
@@ -45,11 +50,11 @@ export class LivefeedsearchComponent implements OnInit, OnDestroy {
   }
 
   DisplaySymbols() {
+    this.nosymbolFound = false;
     if (!this.searchText) {
       this.symbolList.splice(0);
       return;
     }
-
     this.livefeedservice.fetchAllSymbols(this.searchText)
       .subscribe((data) => {
         this.symbolList = data;
@@ -71,28 +76,35 @@ export class LivefeedsearchComponent implements OnInit, OnDestroy {
 
 
   ShowStockData(option) {
-    this.ls.display(true);
+
     this.ClearAll();
-    let searchSymbol = option.Symbol;
-    // To be commented
-    searchSymbol = option.Symbol === 'DISHTV' ? 'DLTR' : 'AAPL';
-    this.livefeedservice.fetchStockData(searchSymbol)
-      .subscribe((result) => {
-        if (result) {
-          this.RestartInterval(searchSymbol);
-          this.stockData = {
-            Exchange: option.Exchange,
-            Company: option.Exchange,
-            StockName: option.Symbol,
-            StockChange: +(+result['Global Quote']['09. change']).toFixed(2),
-            StockPrice: +(+result['Global Quote']['05. price']).toFixed(2),
-            StockChangePercent: this.CalculatePercentage(result['Global Quote']['10. change percent']),
-            StockUpdated: this.GetFormattedDate(new Date(result['Global Quote']['07. latest trading day']))
-          };
-          this.stockData.StockFlag = this.stockData.StockChange >= 0 ? true : false;
-        }
-        this.ls.display(false);
-      });
+    if (option.Alphavantage && option.Alphavantage.length > 0) {
+      this.ls.display(true);
+      const searchSymbol = option.Alphavantage;
+      this.livefeedservice.fetchStockData(searchSymbol)
+        .subscribe((result) => {
+          if (result) {
+            this.RestartInterval(searchSymbol);
+            this.stockData = {
+              Exchange: option.Exchange,
+              Company: option.Exchange,
+              StockName: option.Symbol,
+              StockChange: +(+result['Global Quote']['09. change']).toFixed(2),
+              StockPrice: +(+result['Global Quote']['05. price']).toFixed(2),
+              StockChangePercent: this.CalculatePercentage(result['Global Quote']['10. change percent']),
+              StockUpdated: this.GetFormattedDate(new Date(result['Global Quote']['07. latest trading day']))
+            };
+            this.stockData.StockFlag = this.stockData.StockChange >= 0 ? true : false;
+          }
+          this.symbolSearched = option.Symbol;
+          this.exchangeSearched = option.Exchange;
+          this.WatchButtonText = this.CheckIfSymbolIsSubscribed(option.Exchange, option.Symbol) ? 'Watching' : 'Watch';
+          this.WatchButtonDisabled = this.CheckIfSymbolIsSubscribed(option.Exchange, option.Symbol);
+          this.ls.display(false);
+        });
+    } else {
+      this.nosymbolFound = true;
+    }
   }
 
   CalculatePercentage(value) {
@@ -168,5 +180,14 @@ export class LivefeedsearchComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.ClearInterval();
+  }
+
+  CheckIfSymbolIsSubscribed(newexchange, newsymbol) {
+    const exchanges = this.exchangeSelectionItems.map(item => item.itemName);
+    const symbols = this.symbolSelectedItems.map(item => item.itemName);
+    if (exchanges.indexOf(newexchange) > -1 && symbols.indexOf(newsymbol) > -1) {
+      return true;
+    }
+    return false;
   }
 }

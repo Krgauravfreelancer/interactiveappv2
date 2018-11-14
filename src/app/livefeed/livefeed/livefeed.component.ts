@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
 import * as moment from 'moment';
 import { LivefeedService } from '../livefeed.service';
-import { Subscription } from 'rxjs/Subscription';
 import * as io from 'socket.io-client';
 
 declare const $: any;
@@ -21,15 +20,28 @@ export interface MessageModel {
   templateUrl: './livefeed.component.html',
   styleUrls: ['./livefeed.component.css']
 })
-export class LivefeedComponent implements OnInit, OnDestroy {
+export class LivefeedComponent implements OnInit, OnDestroy, OnChanges {
   socket: SocketIOClient.Socket;
   client: any;
-  exchangeSelectionItems = [];
-  symbolSelectedItems = [];
   Messages: MessageModel[] = [];
+  $msgboxlist: any;
+  @Input() Symbol: string;
+  @Input() Exchange: string;
   constructor(private livefeedservice: LivefeedService) {
+    // this.socket = io('http://localhost:8080/');
     this.socket = io('https://interactiveappv2.herokuapp.com/');
 
+  }
+
+  ngOnChanges(sc: SimpleChanges) {
+    console.log(sc);
+    if (sc.Symbol && !sc.Symbol.currentValue) {
+      this.Messages = [];
+    } else if (sc.Exchange && !sc.Exchange.currentValue) {
+      this.Messages = [];
+    } else {
+      this.FetchMessages();
+    }
   }
 
   ngOnDestroy() {
@@ -39,32 +51,30 @@ export class LivefeedComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.livefeedservice.getSelectedItems(JSON.parse(localStorage.getItem('user')).email)
-      .subscribe((userdata) => {
-        if (userdata && userdata.exchange && userdata.symbols) {
-          this.exchangeSelectionItems = userdata.exchange;
-          this.symbolSelectedItems = userdata.symbols;
-          console.log(this.exchangeSelectionItems, this.symbolSelectedItems);
-        }
-
-        const exchanges = this.exchangeSelectionItems.map(item => item.itemName).join();
-        const symbols = this.symbolSelectedItems.map(item => item.itemName).join();
-
-        this.livefeedservice.getSubscribedNewsFeed(exchanges, symbols)
-          .subscribe((messagedata) => {
-            this.Messages = messagedata;
-            console.log(messagedata);
-            this.ProcessTimeStamp(true);
-          });
-        this.socket.on('messagesChanged', (newMessages) => {
-          this.Messages = newMessages.msg;
-          console.log(newMessages.msg);
-          this.ProcessTimeStamp(true);
-        });
-
-      });
-
+    this.FetchMessages();
   }
+
+  FetchMessages() {
+    console.log(this.Symbol, this.Exchange);
+    if (this.Symbol && this.Exchange) {
+      this.livefeedservice.getSubscribedNewsFeed(this.Exchange, this.Symbol)
+        .subscribe((messagedata) => {
+          this.ManageMessages(messagedata);
+        });
+      this.socket.on('messagesChanged', (newMessages) => {
+        this.ManageMessages(newMessages.msg);
+      });
+    }
+  }
+
+  ManageMessages(msgs) {
+    this.Messages = msgs;
+    this.ProcessTimeStamp(true);
+    this.$msgboxlist = $('.msgboxlist');
+    this.$msgboxlist.perfectScrollbar();
+  }
+
+
 
   ProcessTimeStamp(sortflag?: boolean) {
     this.Messages.forEach((element) => {
@@ -76,58 +86,15 @@ export class LivefeedComponent implements OnInit, OnDestroy {
         if (n1.UnixTimeStamp > n2.UnixTimeStamp) {
           return -1;
         }
-
         if (n1.UnixTimeStamp < n2.UnixTimeStamp) {
           return 1;
         }
-
         return 0;
       });
     }
-    // console.log(this.Messages);
   }
-
-  PrepareMessages(exchanges, symbols, messages) {
-    exchanges.forEach(excs => {
-      const exc = excs.itemName;
-      symbols.forEach(syms => {
-        const sym = syms.itemName;
-        if (messages && messages[exc] && messages[exc][sym]) {
-          const objArray = Object.values(messages[exc][sym]);
-          for (let index = 0; index < objArray.length; index++) {
-            const obj = objArray[index];
-            for (const key in obj) {
-              if (obj.hasOwnProperty(key)) {
-                const element = obj[key];
-                // console.log(element, key);
-                this.Messages.push({
-                  Exchange: exc,
-                  MessageDate: element.substr(0, 9),
-                  UnixTimeStamp: key,
-                  MessageText: element.substr(17)
-                });
-              }
-            }
-          }
-          this.ProcessTimeStamp(true);
-          // console.log(this.Messages);
-        }
-      });
-    });
-  }
-
 
   timeConverter(unix) {
-    // const a = new Date(unix * 1000);
-    // const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    // const year = a.getFullYear();
-    // const month = months[a.getMonth()];
-    // const date = a.getDate().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
-    // const hour = a.getHours().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
-    // const min = a.getMinutes().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
-    // const sec = a.getSeconds().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
-    // const time = date + ' ' + month + ' ' + year + ', ' + hour + ':' + min + ':' + sec;
-    // return time;
     const options = {
       weekday: 'short',
       year: 'numeric',
@@ -138,9 +105,6 @@ export class LivefeedComponent implements OnInit, OnDestroy {
       second: '2-digit'
     };
     return new Date(unix * 1000).toLocaleDateString('en-US', options);
-
-    // return new Date(unix * 1000).toISOString();
-    // .toISOString();
   }
 
 }

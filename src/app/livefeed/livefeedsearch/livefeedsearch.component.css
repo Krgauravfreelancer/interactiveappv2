@@ -33,6 +33,15 @@
     overflow: hidden;
 }
 
+.nosymbol {
+    font-weight: 500;
+    color: red;
+    display: block;
+    margin-top: -20px;
+    margin-left: 40px;
+    font-size: 16px;
+}
+
 .SearchListItems {
     border-bottom: 1px solid #e5e5e5;
     line-height: .525rem;

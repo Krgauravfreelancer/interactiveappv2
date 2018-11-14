@@ -25,6 +25,7 @@ import { LoaderService } from './shared/loader.service';
 import { LivefeedComponent } from './livefeed/livefeed/livefeed.component';
 import { LivefeedsearchComponent } from './livefeed/livefeedsearch/livefeedsearch.component';
 import { LivefeedService } from './livefeed/livefeed.service';
+import { LivefeedcontainerComponent } from './livefeed/livefeedcontainer/livefeedcontainer.component';
 
 firebase.initializeApp(fb.firebase);
 
@@ -45,7 +46,8 @@ firebase.initializeApp(fb.firebase);
         AdminLayoutComponent,
         AuthLayoutComponent,
         LivefeedComponent,
-        LivefeedsearchComponent
+        LivefeedsearchComponent,
+        LivefeedcontainerComponent
     ],
     providers: [
         AuthService,

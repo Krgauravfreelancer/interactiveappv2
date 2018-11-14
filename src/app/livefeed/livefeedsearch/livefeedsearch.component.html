@@ -15,6 +15,7 @@
       </div>
     </div>
 
+    <span *ngIf="nosymbolFound" class="nosymbol"> No Record found, please try again</span>
 
     <div class="StockHeaderStock-main" *ngIf="stockData">
       <div class="StockHeaderStock">
@@ -37,10 +38,13 @@
           </div>
         </div>
         <div class="StockHeaderFollowContainer">
-          <button class="btns" [ngClass]="[stockData.StockFlag ? 'positivebtn' : 'negativebtn']"
-          (click)="StartWatching(stockData.Exchange, stockData.StockName)" type="button">Watch</button>
+          <button class="btns" [disabled]="WatchButtonDisabled" [ngClass]="[stockData.StockFlag ? 'positivebtn' : 'negativebtn']" (click)="StartWatching(stockData.Exchange, stockData.StockName)"
+            type="button">{{WatchButtonText}}</button>
         </div>
       </div>
     </div>
   </div>
+</div>
+<div style="margin-top: 100px;">
+  <mg-livefeed *ngIf="symbolSearched && exchangeSearched" [Symbol]="symbolSearched" [Exchange]="exchangeSearched"></mg-livefeed>
 </div>
