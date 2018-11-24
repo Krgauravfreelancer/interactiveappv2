@@ -2,7 +2,7 @@
   <div class="container-fluid main">
     <h3>Live News Feed</h3>
     <div class="msgboxlist">
-      <div class="row boxdiv" *ngFor="let msg of Messages">
+      <div [ngStyle]="{'background-color':msg.Exchange === 'BSE' ? bseColor : nseColor }" class="row boxdiv" *ngFor="let msg of Messages">
         <div class="outer">
           <span class="exchange">{{msg.Exchange }}</span>
           <span class="createdat">{{msg.RelativeTime}}</span>

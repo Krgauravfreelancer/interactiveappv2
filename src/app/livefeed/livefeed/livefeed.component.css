@@ -23,13 +23,13 @@
     list-style: none;
     border-top: .0625rem solid #e5e5e5;
     transition: .25s ease-in-out;
-    border-left: .3125rem solid #fff;
+    border-left: .3125rem solid transparent;
     background-color: #fff;
     cursor: pointer;
 }
 
 .boxdiv:hover {
-    background-color: #f7f8fa;
+    background-color: #f7f8fa !important;
     border-left: .3125rem solid #00baff;
 }
 

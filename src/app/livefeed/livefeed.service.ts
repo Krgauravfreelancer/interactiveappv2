@@ -63,4 +63,9 @@ export class LivefeedService {
     return this.http.get('/live/messages', options).map(res => res.json());
   }
 
+  public getMesssageColor() {
+    // return this.http.get(environment.url + '/live/messageColors').map(res => res.json());
+    return this.http.get('/live/messageColors').map(res => res.json());
+  }
+
 }

@@ -75,15 +75,24 @@ export class LivefeedsearchComponent implements OnInit, OnDestroy {
   }
 
 
-  ShowStockData(option) {
+  isNotEmpty(obj) {
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
-    this.ClearAll();
+  ShowStockData(option) {
+    this.ClearAll(option);
+    this.stockData = undefined;
     if (option.Alphavantage && option.Alphavantage.length > 0) {
       this.ls.display(true);
       const searchSymbol = option.Alphavantage;
       this.livefeedservice.fetchStockData(searchSymbol)
         .subscribe((result) => {
-          if (result) {
+          if (result && result['Global Quote'] && this.isNotEmpty(result['Global Quote'])) {
             this.RestartInterval(searchSymbol);
             this.stockData = {
               Exchange: option.Exchange,
@@ -95,15 +104,19 @@ export class LivefeedsearchComponent implements OnInit, OnDestroy {
               StockUpdated: this.GetFormattedDate(new Date(result['Global Quote']['07. latest trading day']))
             };
             this.stockData.StockFlag = this.stockData.StockChange >= 0 ? true : false;
+            this.symbolSearched = option.Symbol;
+            this.exchangeSearched = option.Exchange;
+            this.WatchButtonText = this.CheckIfSymbolIsSubscribed(option.Exchange, option.Symbol) ? 'Watching' : 'Watch';
+            this.WatchButtonDisabled = this.CheckIfSymbolIsSubscribed(option.Exchange, option.Symbol);
+            this.ls.display(false);
+          } else {
+            this.nosymbolFound = true;
+            this.ls.display(false);
           }
-          this.symbolSearched = option.Symbol;
-          this.exchangeSearched = option.Exchange;
-          this.WatchButtonText = this.CheckIfSymbolIsSubscribed(option.Exchange, option.Symbol) ? 'Watching' : 'Watch';
-          this.WatchButtonDisabled = this.CheckIfSymbolIsSubscribed(option.Exchange, option.Symbol);
-          this.ls.display(false);
         });
     } else {
       this.nosymbolFound = true;
+      this.ls.display(false);
     }
   }
 
@@ -115,9 +128,14 @@ export class LivefeedsearchComponent implements OnInit, OnDestroy {
     return '0.00%';
   }
 
-  ClearAll() {
-    this.searchText = '';
+  ClearAll(option) {
+    if (option && option.Symbol) {
+      this.searchText = option.Symbol;
+    } else {
+      this.searchText = '';
+    }
     this.symbolList.splice(0);
+    // this.nosymbolFound = true;
     // this.stockData = undefined;
   }
 
@@ -154,7 +172,9 @@ export class LivefeedsearchComponent implements OnInit, OnDestroy {
   }
 
   StartWatching(newexchange, newsymbol) {
-
+    if (this.WatchButtonText === 'Watching') {
+      return;
+    }
     const exchanges = this.exchangeSelectionItems.map(item => item.itemName);
     const symbols = this.symbolSelectedItems.map(item => item.itemName);
 
@@ -169,11 +189,10 @@ export class LivefeedsearchComponent implements OnInit, OnDestroy {
       exchange: exchanges,
       symbols: symbols
     };
-
     this.livefeedservice.setSelectedItems(JSON.parse(localStorage.getItem('user')).email, options)
       .subscribe(res => {
-        if (res && res.body) {
-          console.log(res.body);
+        if (res) {
+          this.WatchButtonText = 'Watching';
         }
       });
   }

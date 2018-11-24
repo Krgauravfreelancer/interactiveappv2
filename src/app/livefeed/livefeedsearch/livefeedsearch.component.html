@@ -4,7 +4,7 @@
     <a class="search-icon"><i class="fa fa-search"></i></a>
     <input type="search" autocomplete="off" placeholder="Symbol" name="search" class="searchbox" [(ngModel)]="searchText"
       (input)="DisplaySymbols()">
-    <a class="close-icon" (click)="ClearAll()"><i class="fa fa-close"></i></a>
+    <a class="close-icon" (click)="ClearAll(null)"><i class="fa fa-close"></i></a>
 
     <div class="SearchSuggestions" *ngIf="symbolList && symbolList.length > 0">
       <div class="SearchListItems" *ngFor="let search of symbolList" (click)="ShowStockData(search)">
@@ -14,8 +14,8 @@
         </div>
       </div>
     </div>
-
-    <span *ngIf="nosymbolFound" class="nosymbol"> No Record found, please try again</span>
+    
+    <span *ngIf="nosymbolFound === true" class="nosymbol"> No Record found, please try again</span>
 
     <div class="StockHeaderStock-main" *ngIf="stockData">
       <div class="StockHeaderStock">
@@ -38,13 +38,13 @@
           </div>
         </div>
         <div class="StockHeaderFollowContainer">
-          <button class="btns" [disabled]="WatchButtonDisabled" [ngClass]="[stockData.StockFlag ? 'positivebtn' : 'negativebtn']" (click)="StartWatching(stockData.Exchange, stockData.StockName)"
-            type="button">{{WatchButtonText}}</button>
+          <button class="btns" [disabled]="WatchButtonDisabled" [ngClass]="[stockData.StockFlag ? 'positivebtn' : 'negativebtn']"
+            (click)="StartWatching(stockData.Exchange, stockData.StockName)" type="button">{{WatchButtonText}}</button>
         </div>
       </div>
     </div>
   </div>
 </div>
-<div style="margin-top: 100px;">
+<div *ngIf="stockData" style="margin-top: 100px;">
   <mg-livefeed *ngIf="symbolSearched && exchangeSearched" [Symbol]="symbolSearched" [Exchange]="exchangeSearched"></mg-livefeed>
 </div>

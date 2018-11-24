@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import * as socketIo from 'socket.io-client';
-import { environment } from '../../../environments/environment.prod';
+import { environment } from '../../../environments/environment';
 
 
 @Injectable()
@@ -10,7 +10,7 @@ export class LiveService {
 
     public initSocket(): void {
         this.socket = socketIo(environment.url);
-        console.log('Connected to server.')
+        console.log('Connected to server.');
     }
 
     public onMessage(): Observable<any> {
@@ -19,9 +19,9 @@ export class LiveService {
         });
     }
 
-    public disConnectSocket(): void {      
-      this.socket.emit('disconnect', function(){
-        console.log('Disconnected from server');
-      })
+    public disConnectSocket(): void {
+        this.socket.emit('disconnect', function () {
+            console.log('Disconnected from server');
+        });
     }
 }

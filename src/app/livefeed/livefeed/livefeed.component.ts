@@ -27,6 +27,8 @@ export class LivefeedComponent implements OnInit, OnDestroy, OnChanges {
   $msgboxlist: any;
   @Input() Symbol: string;
   @Input() Exchange: string;
+  bseColor = '#fff';
+  nseColor = '#fff';
   constructor(private livefeedservice: LivefeedService) {
     // this.socket = io('http://localhost:8080/');
     this.socket = io('https://interactiveappv2.herokuapp.com/');
@@ -60,6 +62,13 @@ export class LivefeedComponent implements OnInit, OnDestroy, OnChanges {
       this.livefeedservice.getSubscribedNewsFeed(this.Exchange, this.Symbol)
         .subscribe((messagedata) => {
           this.ManageMessages(messagedata);
+          this.livefeedservice.getMesssageColor().subscribe(
+            (colors: any) => {
+              if (colors && colors.messagecolors) {
+                this.bseColor = colors.messagecolors['BSE'];
+                this.nseColor = colors.messagecolors['NSE'];
+              }
+            });
         });
       this.socket.on('messagesChanged', (newMessages) => {
         this.ManageMessages(newMessages.msg);

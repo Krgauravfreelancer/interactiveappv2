@@ -65,6 +65,18 @@ router.get('/messages', (req, res) => {
     // res.end();
 })
 
+router.get('/messageColors', async (req, res) => {
+
+    // const search = req.query['settings'];
+    var ref = firebaseDB.ref("settings");
+    ref.once('value', (snapshot) => {
+        console.log(snapshot.val());
+        let result = snapshot.val();
+        res.send(result);
+    });
+})
+
+
 router.get('/getAllSymbols', async (req, res) => {
     const search = req.query['search'];
     firebaseDB.ref(firebasePath).once('value', (snapshot) => {
