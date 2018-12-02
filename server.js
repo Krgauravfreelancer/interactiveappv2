@@ -69,16 +69,29 @@ server.listen(port, () => console.log(`Magnitudinis is running on \nhost : ${hos
 let sockets = new Set();
 const io = require('socket.io')(server);
 app.set('socketio', io);
-io.on('connection', function(socket){
-    console.log('a user connected');
-    sockets.add(socket);
+var socketlist = [];
+
+io.on('connection', function (socket) {
+    socketlist.push(socket);
+    console.log(socketlist.length);
+    socket.emit('socket_is_connected', 'You are connected!');
+    socket.on('close', function () {
+        console.log('socket closed');
+        console.log(socketlist.length);
+        socketlist.splice(socketlist.indexOf(socket), 1);
+    });
 });
 
-io.on('disconnect', function(socket){
-    console.log('user disconnected');
-});
+// io.on('connection', function(socket){
+//     console.log('a user connected');
+//     sockets.add(socket);
+// });
+
+// io.on('disconnect', function(socket){
+//     console.log('user disconnected');
+// });
 tradeRoute.initialize(io);
-  
+
 
 
 

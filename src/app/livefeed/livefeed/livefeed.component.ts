@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Input, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
 import * as moment from 'moment';
 import { LivefeedService } from '../livefeed.service';
-import * as io from 'socket.io-client';
+
 
 declare const $: any;
 
@@ -25,14 +25,14 @@ export class LivefeedComponent implements OnInit, OnDestroy, OnChanges {
   client: any;
   Messages: MessageModel[] = [];
   $msgboxlist: any;
+  mesnew: any;
   @Input() Symbol: string;
   @Input() Exchange: string;
   bseColor = '#fff';
   nseColor = '#fff';
   constructor(private livefeedservice: LivefeedService) {
+    this.socket = this.livefeedservice.GetSocketConnection();
     // this.socket = io('http://localhost:8080/');
-    this.socket = io('https://interactiveappv2.herokuapp.com/');
-
   }
 
   ngOnChanges(sc: SimpleChanges) {
@@ -47,12 +47,12 @@ export class LivefeedComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnDestroy() {
-    if (this.socket.connected) {
-      this.socket.disconnect();
-    }
+    this.livefeedservice.Disconnect();
   }
 
   ngOnInit() {
+    // this.socket = this.livefeedservice.GetSocketConnection();
+
     this.FetchMessages();
   }
 
@@ -70,8 +70,13 @@ export class LivefeedComponent implements OnInit, OnDestroy, OnChanges {
               }
             });
         });
-      this.socket.on('messagesChanged', (newMessages) => {
-        this.ManageMessages(newMessages.msg);
+      console.log(this.socket);
+        this.socket.on('messagesChanged', (newMessages) => {
+        console.log(newMessages);
+        this.mesnew = newMessages;
+        setTimeout(() => {
+          this.ManageMessagesNew();
+        }, 1000);
       });
     }
   }
@@ -83,6 +88,12 @@ export class LivefeedComponent implements OnInit, OnDestroy, OnChanges {
     this.$msgboxlist.perfectScrollbar();
   }
 
+  ManageMessagesNew() {
+    this.Messages = this.mesnew.msg;
+    this.ProcessTimeStamp(true);
+    this.$msgboxlist = $('.msgboxlist');
+    this.$msgboxlist.perfectScrollbar();
+  }
 
 
   ProcessTimeStamp(sortflag?: boolean) {

@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { Http, URLSearchParams, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 // import { environment } from '../../environments/environment';
+import * as io from 'socket.io-client';
 
 @Injectable()
 export class LivefeedService {
 
   key = 'SA4L4AKLG5BWWGLK';
+  public socket: SocketIOClient.Socket;
   constructor(private http: Http) { }
 
   public fetchAllSymbols(searchText) {
@@ -66,6 +68,23 @@ export class LivefeedService {
   public getMesssageColor() {
     // return this.http.get(environment.url + '/live/messageColors').map(res => res.json());
     return this.http.get('/live/messageColors').map(res => res.json());
+  }
+
+  public GetSocketConnection() {
+    console.log(this.socket);
+    if (!this.socket) {
+      this.socket = io('http://localhost:8080/');
+      console.log(this.socket);
+      // this.socket = io('https://interactiveappv2.herokuapp.com/');
+    }
+    return this.socket;
+  }
+
+  public Disconnect() {
+    if (this.socket) {
+      this.socket.close();
+      this.socket.disconnect();
+    }
   }
 
 }
