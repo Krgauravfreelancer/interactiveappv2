@@ -73,9 +73,9 @@ export class LivefeedService {
   public GetSocketConnection() {
     console.log(this.socket);
     if (!this.socket) {
-      this.socket = io('http://localhost:8080/');
+      this.socket = io('https://interactiveappv2.herokuapp.com/');
+    //   this.socket = io('http://localhost:8080/');
       console.log(this.socket);
-      // this.socket = io('https://interactiveappv2.herokuapp.com/');
     }
     return this.socket;
   }
